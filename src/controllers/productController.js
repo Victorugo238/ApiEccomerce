@@ -3,7 +3,7 @@ const product = require("../models/product");
 
 
 const productController = {
-    product: async (req,res) =>{
+    products: async (req,res) =>{
         const productAll = await product.findAll();
         return res.status(201).json({
             products: productAll
@@ -33,9 +33,51 @@ const productController = {
         } catch (error) {
             console.log(error)
         }
+    },
+    product: async(req,res) =>{
+        const { id } = req.params;
+        const produ = await product.findOne({
+            where: {
+                id: id
+            }
+        })
 
+        if(!produ){
+            return res.status(401).json({
+                message:"produto não encontrado"
+            })
+        }
+        return res.status(201).json({
+            produto:{
+                produ
+            } 
+        })
+    },
 
+    delProduct: async (req,res) => {
+        const { id } = req.params;
+        const delProduct = product.findOne({
+            where:{
+                id:id,
+            }
+        })
+        if(!delProduct){
+            return res.status(401).json({
+                message:"ERR0 PRODUTO NÃO ENCONTRADO"
+            })
+        }
 
+        const result = await sequelize.transaction(async(t) => {
+            const deleteprod = await product.destroy({
+                where:{
+                    id
+                }
+            })
+        })
+
+        return res.status(201).json({
+            message:"Produto excluido com sucesso!"
+        })
     }
 }
 

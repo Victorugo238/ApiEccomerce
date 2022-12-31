@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: false }))
 
 
 app.use("/admin", adminRouter);
-app.use("/product",productRouter);
+app.use("/products",productRouter);
 
 app.listen(port, () => {
     console.log("estamos rodando na porta 3000");
